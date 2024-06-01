@@ -19,7 +19,7 @@ searchButtonOnClick = () => {
             
             
 
-            tableBody.innerHTML = ''; // Clear previous content
+            tableBody.innerHTML = ''; 
             return response.json();
         })
         .then(products => {
@@ -46,7 +46,7 @@ searchButtonOnClick = () => {
 productFormOnSubmit = (event) => {
     // BEGIN CODE HERE
 
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault(); 
 
     const nameInput = document.getElementById('name');
     const prYearInput = document.getElementById('prYear');
