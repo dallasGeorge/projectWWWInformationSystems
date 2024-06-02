@@ -1,3 +1,46 @@
 /* BEGIN CODE HERE */
+.header {
+    height: 150px;
+    padding: 2%;
+}
+
+.logo {
+    height: 58px;
+    width: 250px;
+}
+
+.frame {
+    height: 400px;
+    width: 1200px;
+    margin-bottom: 20px;
+}
+
+.frame1 {
+    margin-bottom: 20px;
+}
+
+.image {
+    height: 400px;
+    width: 600px;
+}
+
+.iframe {
+    height: 600px;
+    width: 1200px;
+}
+
+.footer {
+    height: 100px;
+}
+
+.text-start {
+    height: 200px;
+    width: 300px;
+}
+
+.text-end {
+    height: 200px;
+    width: 300px;
+}
 
 /* END CODE HERE */

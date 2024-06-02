@@ -19,12 +19,25 @@ mongo.db.products.create_index([("name", TEXT)])
 @app.route("/search", methods=["GET"])
 def search():
     # BEGIN CODE HERE
-    name = request.args.get("name", "")
-    products = list(mongo.db.products.find({"$text": {"$search": name}}).sort("price", -1))
-    result = [{"id": str(product["_id"]), "name": product["name"], "production_Year": product["production_Year"],
-               "price": product["price"], "color": product["color"], "size": product["size"]} for product in products]
-    return jsonify(result)
-    #return ""
+    name = request.args.get("name")
+    products = list(mongo.db.products.find({"name": name}))
+    if not products:
+        products = list(mongo.db.products.find({"$text": {"$search": name}}).sort("price", -1))
+
+    results = []
+    for product in products:
+        result = {
+            "id": str(product["_id"]),
+            "name": product["name"],
+            "production_Year": product["production_Year"],
+            "price": product["price"],
+            "color": product["color"],
+            "size": product["size"]
+        }
+        results.append(result)
+
+    return jsonify(results)
+    return ""
     # END CODE HERE
 
 
@@ -47,33 +60,30 @@ def add_product():
 
 @app.route("/content-based-filtering", methods=["POST"])
 def content_based_filtering():
-    # BEGIN CODE HERE
-       # Λήψη δεδομένων από το αίτημα
+    # Extract data from the request
     data = request.get_json()
-    new_product_vector = [data["production_year"], data["price"], data["color"], data["size"]]
-    similar_products = []
+    new_product_vector = np.array([data["production_Year"], data["price"], data["color"], data["size"]])
 
-    # Ανάκτηση όλων των προϊόντων από τη βάση δεδομένων
-    all_products = collection.find({})
+    similar_products = []
+    all_products = mongo.db.products.find({})
 
     for product in all_products:
-        existing_product_vector = [product["production_year"], product["price"], product["color"], product["size"]]
-        
-        # Υπολογισμός cosine similarity
-        vec1 = np.array(new_product_vector)
-        vec2 = np.array(existing_product_vector)
-        dot_product = np.dot(vec1, vec2)
-        norm_vec1 = np.linalg.norm(vec1)
-        norm_vec2 = np.linalg.norm(vec2)
-        if norm_vec1 == 0 or norm_vec2 == 0:
+        existing_product_vector = np.array([product["production_Year"], product["price"], product["color"], product["size"]])
+
+        # Normalize vectors
+        vec1_norm = np.linalg.norm(new_product_vector)
+        vec2_norm = np.linalg.norm(existing_product_vector)
+
+        # Compute similarity
+        if vec1_norm == 0 or vec2_norm == 0:
             similarity = 0
         else:
-            similarity = dot_product / (norm_vec1 * norm_vec2)
-        
-        # Έλεγχος αν η ομοιότητα είναι πάνω από 70%
+            similarity = np.dot(new_product_vector / vec1_norm, existing_product_vector / vec2_norm)
+
+        print(similarity)
         if similarity > 0.7:
             similar_products.append(product["name"])
-    
+
     return jsonify(similar_products)
     return ""
     # END CODE HERE

@@ -56,10 +56,10 @@ productFormOnSubmit = (event) => {
 
     const newProduct = {
         name: nameInput.value.trim(),
-        production_Year: prYearInput.value.trim(),
-        price: priceInput.value.trim(),
-        color: colorInput.value.trim(),
-        size: sizeInput.value.trim()
+        production_Year: parseInt(prYearInput.value.trim(), 10),
+        price: parseInt(priceInput.value.trim(), 10),
+        color: parseInt(colorInput.value.trim(), 10),
+        size: parseInt(sizeInput.value.trim(), 10)
         };
         fetch(`${api}/add-product`, {
             method: 'POST',
