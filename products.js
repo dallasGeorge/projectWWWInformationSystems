@@ -38,7 +38,7 @@ searchButtonOnClick = () => {
         })
         
         .catch(error => {
-            console.error('There was a problem with the search request:', error);
+            console.error('error with sending the search request', error);
         });
     // END CODE HERE
 }
@@ -78,7 +78,7 @@ productFormOnSubmit = (event) => {
             alert('ΟΚ');}
         })
         .catch(error => {
-            console.error('There was a problem with the product addition request:', error);
+            console.error('error with posting a product', error);
         });
     // END CODE HERE
 }

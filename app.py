@@ -44,9 +44,10 @@ def search():
 @app.route("/add-product", methods=["POST"])
 def add_product():
     # BEGIN CODE HERE
+    colors = [1, 2, 3]
+    sizes = [1, 2, 3, 4]
     content = request.json
-    # Validate color and size
-    if content["color"] not in [1, 2, 3] or content["size"] not in [1, 2, 3, 4]:
+    if content["color"] not in colors or content["size"] not in sizes:
         return jsonify({"error": "Invalid color (1 or 2 or 3) or size (1 or 2 or 3 or 4) code"}), 400
   
     if (mongo.db.products.find_one({"name": content["name"]})):
@@ -60,31 +61,29 @@ def add_product():
 
 @app.route("/content-based-filtering", methods=["POST"])
 def content_based_filtering():
-    # Extract data from the request
+    # BEGIN CODE HERE
     data = request.get_json()
-    new_product_vector = np.array([data["production_Year"], data["price"], data["color"], data["size"]])
+    input = np.array([data["production_Year"], data["price"], data["color"], data["size"]])
 
-    similar_products = []
+    results = []
     all_products = mongo.db.products.find({})
 
     for product in all_products:
-        existing_product_vector = np.array([product["production_Year"], product["price"], product["color"], product["size"]])
+        pr_array = np.array([product["production_Year"], product["price"], product["color"], product["size"]])
 
-        # Normalize vectors
-        vec1_norm = np.linalg.norm(new_product_vector)
-        vec2_norm = np.linalg.norm(existing_product_vector)
+        vec1_norm = np.linalg.norm(input)
+        vec2_norm = np.linalg.norm(pr_array)
 
-        # Compute similarity
-        if vec1_norm == 0 or vec2_norm == 0:
-            similarity = 0
+        if vec1_norm != 0 or vec2_norm != 0:
+            similarity = np.dot(input / vec1_norm, pr_array / vec2_norm)
         else:
-            similarity = np.dot(new_product_vector / vec1_norm, existing_product_vector / vec2_norm)
+            similarity= 0
 
         
         if similarity > 0.7:
-            similar_products.append(product["name"])
+            results.append(product["name"])
 
-    return jsonify(similar_products)
+    return jsonify(results)
     return ""
     # END CODE HERE
 
