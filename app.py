@@ -80,7 +80,7 @@ def content_based_filtering():
         else:
             similarity = np.dot(new_product_vector / vec1_norm, existing_product_vector / vec2_norm)
 
-        print(similarity)
+        
         if similarity > 0.7:
             similar_products.append(product["name"])
 
