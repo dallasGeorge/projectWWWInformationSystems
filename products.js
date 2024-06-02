@@ -69,8 +69,13 @@ productFormOnSubmit = (event) => {
             body: JSON.stringify(newProduct),
         })
         .then(response => {
-        
-            return response.json();
+            if(response.status == 200){
+            nameInput.value = '';
+            prYearInput.value = '';
+            priceInput.value = '';
+            colorInput.value = '';
+            sizeInput.value = '';
+            alert('ΟΚ');}
         })
         .catch(error => {
             console.error('There was a problem with the product addition request:', error);
